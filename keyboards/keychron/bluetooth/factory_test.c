@@ -239,6 +239,35 @@ bool rgb_matrix_indicators_user(void) {
     }
 #endif
 
+#ifdef HIDE_NO_ACTION_KEYS
+    if (layer_state_is(1) || layer_state_is(3))
+    {
+        uint8_t layer = layer_state_is(3) ? 3 : 3;
+        for (uint8_t row=0; row < MATRIX_ROWS; ++row)
+        {
+            for (uint8_t col=0; col < MATRIX_COLS; ++col)
+            {
+                uint8_t led = g_led_config.matrix_co[row][col];
+
+                if (led == NO_LED)
+                    continue;
+
+                keypos_t keypos = {col, row};
+                uint16_t keycode = keymap_key_to_keycode(layer, keypos);
+
+                if (keycode == KC_NO)
+                {
+                    rgb_matrix_set_color(led, RGB_OFF);
+                }
+                else if (keycode != KC_TRANSPARENT)
+                {
+                    rgb_matrix_set_color(led, RGB_WHITE);
+                }
+            }
+        }
+    }
+#endif
+
     return true;
 }
 #endif
