@@ -225,6 +225,20 @@ bool rgb_matrix_indicators_user(void) {
         }
     }
 
+#ifdef CAPS_LOCK_COL_LED
+    if (host_keyboard_led_state().caps_lock) {
+
+        uint8_t caps_lock_x = g_led_config.point[CAPS_LOCK_INDEX].x;
+        for (uint8_t i=0; i < RGB_MATRIX_LED_COUNT; ++i)
+        {
+            if (g_led_config.point[i].x <= caps_lock_x)
+            {
+                rgb_matrix_set_color(i, RGB_RED);
+            }
+        }
+    }
+#endif
+
     return true;
 }
 #endif
